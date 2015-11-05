@@ -2,7 +2,7 @@
 <link href="css/home.css" rel="stylesheet">
 
 <!-- Custom Fonts -->
-<link href="/components/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+<link href="components/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
 <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
 <link href='https://fonts.googleapis.com/css?family=Kaushan+Script' rel='stylesheet' type='text/css'>
 <link href='https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
@@ -53,51 +53,110 @@
         <h1 class="well">Formulario de Registro</h1>
         <div class="col-lg-12 well">
             <div class="row">
-                <form>
+                <form name="form" ng-submit="submit()" accessibleForm novalidate>
                     <div class="col-sm-12">
                         <div class="row">
-                            <div class="col-sm-6 form-group">
+                            <div class="col-sm-6 form-group" ng-class="{ 'has-error' : (form.firstName.$invalid && form.firstName.$touched) || (form.$submitted && form.firstName.$invalid) }">
                                 <label>Nombre</label>
-                                <input type="text" ng-model="firstName" placeholder="Bruce" class="form-control">
+                                <input type="text" ng-model="user.firstName" name="firstName" placeholder="Bruce" class="form-control" ng-required="true" ng-minlength="2" ng-maxlength="45" ng-focus="test()">
                             </div>
-                            <div class="col-sm-6 form-group">
-                                <label>Apellido</label>
-                                <input type="text" ng-model="lastName" placeholder="Springsteen" class="form-control">
+                            <div class="col-sm-6 form-group" ng-class="{ 'has-error' : (form.lastName.$invalid && form.lastName.$touched) || (form.$submitted && form.lastName.$invalid) }">
+                                <label>Apellido(s)</label>
+                                <input type="text" ng-model="user.lastName" name="lastName" placeholder="Springsteen" class="form-control" ng-required="true" ng-minlength="2" ng-maxlength="45">
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label>Dirección</label>
-                            <textarea ng-model="address" placeholder="Evergreen 123, Springfield" rows="2" class="form-control"></textarea>
+                        <div class="row row-error">
+                            <div class="col-sm-6">
+                                <div class="col-error" ng-messages="form.firstName.$error" ng-if="form.$submitted && form.firstName.$error || form.firstName.$touched && form.firstName.$error" >
+                                    <div ng-messages-include="messages.html"></div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="col-error" ng-messages="form.lastName.$error" ng-if="form.$submitted && form.lastName.$error || form.lastName.$touched && form.lastName.$error" >
+                                    <div ng-messages-include="messages.html"></div>
+                                </div>
+                            </div>
                         </div>
                         <div class="row">
-                            <div class="col-sm-4 form-group">
+                            <div class="col-sm-12 form-group" ng-class="{ 'has-error' : (form.address.$invalid && form.address.$touched) || (form.$submitted && form.address.$invalid) }">
+                                <label>Dirección</label>
+                                <input type="text" ng-model="user.address" name="address" placeholder="Evergreen 123, Springfield" class="form-control" ng-required="true" ng-minlength="10" ng-maxlength="100">
+                            </div>
+                        </div>
+                        <div class="row row-error">
+                            <div class="col-sm-12 col-error" ng-messages="form.address.$error" ng-if="form.$submitted && form.address.$error || form.address.$touched && form.address.$error" >
+                                <div ng-messages-include="messages.html"></div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                             <div class="col-sm-5 form-group" ng-class="{ 'has-error' : (form.country.$invalid && form.country.$touched) || (form.$submitted && form.country.$invalid) }">
                                 <label>País</label>
-                                <select ng-model="selectedCountry.countryId" ng-options="country.countryId as country.name for country in countries"></select>
+                                <select class="form-control" name="country" ng-model="user.country" ng-options="country.id as country.name for country in countries" ng-change="populateStates()" ng-required="true">
+                                    <option value="">Selecciona</option>
+                                </select>
                             </div>
-                            <div class="col-sm-4 form-group">
+                            <div class="col-sm-5 form-group" ng-class="{ 'has-error' : (form.state.$invalid && form.state.$touched) || (form.$submitted && form.state.$invalid) }">
                                 <label>Estado</label>
-                                <select ng-model="selectedState.stateId" ng-options="state.stateId as state.name for state in states"></select>
+                                <select class="form-control" name="state" ng-model="user.stateId" ng-options="state.id as state.name for state in states" ng-required="true">
+                                    <option value="">Selecciona</option>
+                                </select>
                             </div>
-                            <div class="col-sm-4 form-group">
+                            <div class="col-sm-2 form-group">
                                 <label>C.P.</label>
                                 <input type="text" placeholder="Enter Zip Code Here.." class="form-control">
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="row row-error">
+                            <div class="col-sm-5">
+                                <div class="col-error" ng-messages="form.country.$error" ng-if="form.$submitted && form.country.$error || form.country.$touched && form.country.$error" >
+                                    <div ng-messages-include="messages.html"></div>
+                                </div>
+                            </div>
+                            <div class="col-sm-5">
+                                <div class="col-error" ng-messages="form.state.$error" ng-if="form.$submitted && form.state.$error || form.state.$touched && form.state.$error" >
+                                    <div ng-messages-include="messages.html"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group" ng-class="{ 'has-error' : (form.email.$invalid && form.email.$touched) || (form.$submitted && form.email.$invalid) }">
                             <label>Email</label>
-                            <input type="email" ng-model="email" placeholder="bruce@springsteen.com" class="form-control">
+                            <input type="email" name="email" ng-model="user.email" placeholder="bruce@springsteen.com" class="form-control" ng-required="true" ng-email="true">
+                        </div>
+                        <div class="row row-error">
+                            <div class="col-sm-12 col-error" ng-messages="form.email.$error" ng-if="form.$submitted && form.email.$error || form.email.$touched && form.email.$error" >
+                                <div ng-messages-include="messages.html"></div>
+                            </div>
                         </div>
                         <div class="row">
-                            <div class="col-sm-6 form-group">
+                            <div class="col-sm-6 form-group" ng-class="{ 'has-error' : (form.password.$invalid && form.password.$touched) || (form.$submitted && form.password.$invalid) }">
                                 <label>Password</label>
-                                <input type="password" ng-model="password" class="form-control">
+                                <input  type="password" name="password" ng-model="user.password" class="form-control" ng-required="true" ng-minlength="6" ng-maxlength="64">
                             </div>
-                            <div class="col-sm-6 form-group">
+                            <div class="col-sm-6 form-group" ng-class="{ 'has-error' : (form.passwordVerify.$invalid && form.passwordVerify.$touched) || (form.$submitted && form.passwordVerify.$invalid) }">
                                 <label>Password (otra vez)</label>
-                                <input type="password" ng-model="passwordVerify" class="form-control">
+                                <input type="password" name="passwordVerify" ng-model="user.passwordVerify" class="form-control" ng-required="true" ng-minlength="6" ng-maxlength="64"d compare-to="user.password">
                             </div>
                         </div>
-                        <button type="button" class="btn btn-md btn-xl">Registrarse</button>
+                        <div class="row row-error">
+                            <div class="col-sm-6">
+                                <div class="col-error" ng-messages="form.password.$error" ng-if="form.$submitted && form.password.$error || form.password.$touched && form.password.$error" required="true" ng-minlength="6" ng-maxlength="64" >
+                                    <div ng-messages-include="messages.html"></div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="col-error" ng-messages="form.passwordVerify.$error" ng-if="form.$submitted && form.passwordVerify.$error || form.passwordVerify.$touched && form.passwordVerify.$error" >
+                                    <div ng-messages-include="messages.html"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-2">
+                                <button type="submit" class="btn btn-md btn-xl">Registrarse</button>
+                            </div>
+                            <div class="col-sm-10">
+                                <div class="alert hidden alert-danger" ng-class="{'hidden': !form.errorMessage}">{{form.errorMessage}}</div>
+                            </div>
                     </div>
                 </form>
             </div>
@@ -138,9 +197,6 @@
 <script src="js/classie.js"></script>
 <script src="js/cbpAnimatedHeader.js"></script>
 
-<!-- Contact Form JavaScript -->
-<script src="js/jqBootstrapValidation.js"></script>
-<script src="js/contact_me.js"></script>
 
 <!-- Custom Theme JavaScript -->
-<script src="js/agency.js"></script>
+<script src="js/main.js"></script>

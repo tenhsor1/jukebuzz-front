@@ -920,3 +920,12 @@ img::-moz-selection {
 body {
     webkit-tap-highlight-color: #fed136;
 }
+
+.col-error{
+    color: #843534;
+    margin-top: -17px;
+}
+.col-error p{
+    font-size: 11px;
+    text-align: right;
+}

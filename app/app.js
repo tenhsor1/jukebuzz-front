@@ -4,6 +4,7 @@
 angular.module('jukebuzz', [
   'ngStorage',
   'ngRoute',
+  'ngMessages',
   'ui.router',
   'jukebuzz.home',
   'jukebuzz.signin',
@@ -12,7 +13,7 @@ angular.module('jukebuzz', [
 ])
 .constant('urls', {
        BASE: 'http://localhost:9001/app',
-       BASE_API: 'http://localhost:9000'
+       BASE_API: 'http://localhost:3000/v1'
    })
 .config(['$stateProvider', '$urlRouterProvider', '$httpProvider',
   function($stateProvider, $urlRouterProvider, $httpProvider) {
@@ -62,4 +63,22 @@ angular.module('jukebuzz', [
       }
     ]);
   }
-]);
+])
+.directive('compareTo', function() {
+  return {
+    require: "ngModel",
+    scope: {
+      otherModelValue: "=compareTo"
+    },
+    link: function(scope, element, attributes, ngModel) {
+
+      ngModel.$validators.compareTo = function(modelValue) {
+        return modelValue == scope.otherModelValue;
+      };
+
+      scope.$watch("otherModelValue", function() {
+        ngModel.$validate();
+      });
+    }
+  };
+});

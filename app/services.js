@@ -19,6 +19,7 @@ angular.module('jukebuzz')
         default:
           throw 'Illegal base64url string';
       }
+      return window.atob(output);
     }
     function getClaimsFromToken(){
       var token = $localStorage.token;
@@ -26,6 +27,7 @@ angular.module('jukebuzz')
       if(typeof token !== 'undefined'){
         var encoded = token.split('.')[1];
         user = JSON.parse(urlBase64Decode(encoded));
+        console.log(user);
       }
       return user;
     }
@@ -34,7 +36,7 @@ angular.module('jukebuzz')
 
     return {
       signup: function(data, success, error){
-        $http.post(urls.BASE_API + '/signup.json', data)
+        $http.post(urls.BASE_API + '/auth/signup', data)
           .success(success)
           .error(error);
       },
@@ -53,4 +55,34 @@ angular.module('jukebuzz')
       }
     };
   }
-]);
+])
+.factory('Errors', function(){
+  return {
+    signup: function(error){
+      var data = error.data;
+      if(data){
+        if(data.summary){
+          var invalidAttributes = data.invalidAttributes;
+          var invAttr = "";
+          //receive the invalid attributes, and iterate through them
+          //for getting their names and sending them as a response
+          for (var invalidAttribute in invalidAttributes) {
+            if (invalidAttributes.hasOwnProperty(invalidAttribute)) {
+              if(invalidAttribute == 'email'){
+                //if the invalid attribute is the email, then add the message received
+                //as a response
+                invAttr +=  invalidAttributes[invalidAttribute][0].message + ", ";
+              }else{
+                invAttr +=  invalidAttribute + ", ";
+              }
+            }
+            invAttr = invAttr.replace(/(^[,\s]+)|([,\s]+$)/g, '');
+          }
+          return data.summary + ": " + invAttr;
+        }
+      }else{
+        return "";
+      }
+    }
+  };
+});

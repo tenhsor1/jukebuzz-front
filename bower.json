@@ -11,6 +11,7 @@
     "angular-ui-router": "*",
     "angular-loader": "~1.4.0",
     "angular-mocks": "~1.4.0",
+    "angular-messages": "~1.4.0",
     "angular-loading-bar": "*",
     "ngstorage": "*",
     "jquery": "~2.1.1",
