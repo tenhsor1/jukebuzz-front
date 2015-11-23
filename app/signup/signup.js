@@ -32,21 +32,6 @@ angular.module('jukebuzz.signup', ['ngRoute'])
       }else{
         $scope.states = [];
       }
-    }
-
-    $scope.signup = function(){
-      var formData = {
-        email: $scope.email,
-        password: $scope.password
-      };
-      Auth.signup(formData,
-        function (res){
-          $localStorage.token = res.token;
-          $state.go('panel');
-        },
-        function(){
-        $scope.error = 'Error al crear el usuario';
-      });
     };
 
     $scope.submit = function(){

@@ -41,13 +41,14 @@ angular.module('jukebuzz')
           .error(error);
       },
       signin: function(data, success, error){
-        $http.post(urls.BASE_API + '/login', data)
+        $http.post(urls.BASE_API + '/auth/signin', data)
           .success(success)
           .error(error);
       },
       logout: function(success){
         tokenClaims = {};
         delete $localStorage.token;
+        delete $localStorage.place;
         success();
       },
       getTokenClaims: function(){
@@ -83,6 +84,24 @@ angular.module('jukebuzz')
       }else{
         return "";
       }
+    },
+    signin: function(error){
+      var data = error;
+      console.log(error);
+      if(data.message){
+        return data.message;
+      }
+      return "";
     }
   };
-});
+}).factory('globals', [
+  '$state',
+  '$route',
+  function($state, $route) {
+    return {
+        reloadPanel: function() {
+          $state.go('panel');
+          $route.reload();
+        }
+    };
+}]);

@@ -7,7 +7,6 @@ angular.module('jukebuzz', [
   'ngMessages',
   'ui.router',
   'jukebuzz.home',
-  'jukebuzz.signin',
   'jukebuzz.signup',
   'jukebuzz.panel',
 ])
@@ -26,9 +25,9 @@ angular.module('jukebuzz', [
       controller: 'HomeCtrl'
     })
     .state('signin', {
-      url: '/signin',
-      templateUrl: 'signin/index.html',
-      controller: 'SignInCtrl'
+      url: '/',
+      templateUrl: 'home/index.html',
+      controller: 'HomeCtrl'
     })
     .state('signup', {
       url: '/signup',
@@ -39,23 +38,33 @@ angular.module('jukebuzz', [
       url: '/panel',
       templateUrl: 'panel/index.html',
       controller: 'PanelCtrl'
+    })
+    .state('new-place', {
+        url: "/places/",
+        templateUrl: 'panel/partials/place-form.html',
+        parent: 'panel',
+        controller:'PlaceCtrl',
     });
 
-    $httpProvider.interceptors.push(['$q', '$location', '$localStorage',
-      function($q, $location, $localStorage){
+    $httpProvider.interceptors.push(['$q', '$rootScope', '$location', '$localStorage', '$injector',
+      function($q, $rootScope, $location, $localStorage, $injector){
         //return two functions, one for onbefore requests, and one for handling
         //errors
         return {
           'request': function(config){
             config.headers = config.headers || {};
             if($localStorage.token){
-              config.headers.Authorization = 'Bearer ' + $localStorage.token;
+              config.headers.Authorization = 'JWT ' + $localStorage.token;
             }
             return config;
           },
           'responseError': function(response){
-            if(response.status == 401 || response.status == 403){
-              $location.path('/signin');
+            if(response.status == 403){
+              //$injector.get('$state').transitionTo('signin');
+              /*$rootScope.$on('$stateChangeSuccess',
+              function(event, toState, toParams, fromState, fromParams){
+                //console.log($('#signinButton'));
+              });*/
             }
             return $q.reject(response);
           }
