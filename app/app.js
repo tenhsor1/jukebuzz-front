@@ -16,7 +16,7 @@ angular.module('jukebuzz', [
    })
 .config(['$stateProvider', '$urlRouterProvider', '$httpProvider',
   function($stateProvider, $urlRouterProvider, $httpProvider) {
-    $urlRouterProvider.otherwise('/');
+    $urlRouterProvider.otherwise('/panel');
 
     $stateProvider
     .state('home', {
@@ -44,6 +44,18 @@ angular.module('jukebuzz', [
         templateUrl: 'panel/partials/place-form.html',
         parent: 'panel',
         controller:'PlaceCtrl',
+    })
+    .state('lists', {
+        url: "/lists/",
+        templateUrl: 'panel/partials/lists.html',
+        parent: 'panel',
+        controller:'ListsCtrl',
+    })
+    .state('add-list', {
+        url: "/lists/new",
+        templateUrl: 'panel/partials/list-form.html',
+        parent: 'panel',
+        controller:'ListCtrl',
     });
 
     $httpProvider.interceptors.push(['$q', '$rootScope', '$location', '$localStorage', '$injector',
@@ -89,5 +101,20 @@ angular.module('jukebuzz', [
         ngModel.$validate();
       });
     }
+  };
+})
+.directive('dropzone', function () {
+  return function (scope, element, attrs) {
+    var config, dropzone;
+
+    config = scope[attrs.dropzone];
+
+    // create a Dropzone for the element with the given options
+    dropzone = new Dropzone(element[0], config.options);
+
+    // bind the given event handlers
+    angular.forEach(config.eventHandlers, function (handler, event) {
+      dropzone.on(event, handler);
+    });
   };
 });

@@ -75,19 +75,17 @@
 </div>
 
 <div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="titleLabel" data-keyboard="false" data-backdrop="static">
-    <form name="form" ng-submit="login()" novalidate>
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                <h4 class="modal-title" id="titleLabel">Guardar Lugar</h4>
-                </div>
-                <div class="modal-body">
-                    <span class="alert alert-success">El lugar '{{newPlace.name}}' se ha guardado correctamente</span>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" ng-click="reloadPanel()" class="btn btn-xl btn-sm">Aceptar</button>
-                </div>
-            </div>
-        </div>
-  </form>
+      <div class="modal-dialog" role="document">
+          <div class="modal-content">
+              <div class="modal-header">
+              <h4 class="modal-title" id="titleLabel">Guardar Lugar</h4>
+              </div>
+              <div class="modal-body">
+                  <span class="alert alert-success">El lugar '{{newPlace.name}}' se ha guardado correctamente</span>
+              </div>
+              <div class="modal-footer">
+                  <button type="button" ng-click="reloadPanel()" class="btn btn-xl btn-sm">Aceptar</button>
+              </div>
+          </div>
+      </div>
 </div>

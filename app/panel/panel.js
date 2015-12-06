@@ -118,4 +118,142 @@ angular.module('jukebuzz.panel', ['ngRoute'])
     $scope.reloadPanel = function(){
       globals.reloadPanel();
     };
+  }])
+.controller('ListsCtrl', [
+  '$scope',
+  '$state',
+  '$stateParams',
+  '$http',
+  '$localStorage',
+  'Auth',
+  'urls',
+  'globals',
+  function($scope,
+    $state,
+    $stateParams,
+    $http,
+    $localStorage,
+    Auth,
+    urls,
+    globals) {
+
+  }])
+.controller('ListCtrl', [
+  '$scope',
+  '$state',
+  '$stateParams',
+  '$http',
+  '$localStorage',
+  '$timeout',
+  'Auth',
+  'urls',
+  'globals',
+  'id3Reader',
+  function($scope,
+    $state,
+    $stateParams,
+    $http,
+    $localStorage,
+    $timeout,
+    Auth,
+    urls,
+    globals,
+    id3Reader) {
+
+    $scope.list = {};
+    $scope.list.songs = [];
+    $scope.formList = {};
+    $scope.formList.warningMessage = '';
+    if($stateParams.action == 'edit'){
+      $scope.formList.action = 'Editar';
+    }else{
+      $scope.formList.action = 'Nueva';
+    }
+
+    $scope.submit = function(){
+      if ($scope.form.$invalid) {
+        $scope.form.errorMessage = 'Se encontraron errores en el formulario';
+        return;
+      }else if($scope.list.songs.length == 0){
+        $scope.form.errorMessage = 'Agrega al menos una canción a tu lista de canciones';
+      }else{
+        //if the form has valid information, then send the new list to the api
+        console.log($scope.list);
+        $http.post(urls.BASE_API + '/lists', $scope.list)
+        .then(function(listResult){
+          $scope.newList = listResult.data.data;
+          $('#successModal').modal('show');
+        }, function(listError){
+          console.log(listError);
+        });
+      }
+    };
+
+    $scope.reloadLists = function(){
+      $state.go('lists');
+    };
+
+    function loadId3Tags(tags){
+      console.log(tags);
+      var songNode = document.getElementById('song-template').cloneNode(true);
+      songNode.removeAttribute('id');
+
+      var filename = tags.filename.replace(/\.[^/.]+$/, "");
+      var alternativeArtist = filename.split('-')[0];
+      var alternativeTitle = filename.split('-')[1];
+
+      if(alternativeArtist.length <= 0){
+        alternativeArtist = filename;
+      }
+      if(alternativeTitle.length <= 0){
+        alternativeTitle = filename;
+      }
+
+      songNode.querySelector('.song-artist').innerHTML = tags.artist || alternativeArtist;
+      songNode.querySelector('.song-title').innerHTML = tags.title || alternativeTitle;
+
+      songNode.querySelector('.input-artist').innerHTML = tags.artist || alternativeArtist;
+      songNode.querySelector('.input-title').innerHTML = tags.title || alternativeTitle;
+      songNode.querySelector('.input-genre').innerHTML = tags.genre || "-";
+
+      document.getElementById('show-songs').appendChild(songNode);
+      var song = {
+        'artist': tags.artist || alternativeArtist,
+        'title': tags.title || alternativeTitle,
+        'genre': tags.genre || "-"
+      };
+      $scope.list.songs.push(song);
+    }
+
+    function validateFile(file){
+      var extension = file.name.substr((~-file.name.lastIndexOf(".") >>> 0) + 2);
+      if(extension.toUpperCase() !== 'MP3'){
+
+        $timeout (function () {
+          $scope.formList.warningMessage = 'Todos los archivos seleccionados que ' +
+                                      'no tienen extension MP3 fueron suprimidos';
+        }, 0);
+        console.log($scope.formList.warningMessage);
+        return false;
+      }
+      return true;
+    }
+
+    $scope.dropzoneConfig = {
+    'options': { // passed into the Dropzone constructor
+      'url': '#',
+      autoProcessQueue: false,
+      dictDefaultMessage: 'Arrastra las canciones que deseas agregar a la lista',
+      previewTemplate: document.querySelector('#preview-template').innerHTML,
+    },
+      'eventHandlers': {
+        'addedfile': function(file){
+          if(validateFile(file)){
+            var filename = file.name;
+            id3Reader.loadFromFile(file, loadId3Tags);
+          }
+        }
+      }
+    };
+
   }]);

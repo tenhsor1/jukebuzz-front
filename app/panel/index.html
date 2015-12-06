@@ -19,6 +19,7 @@
     <link href="css/panel/style.css" rel="stylesheet">
     <link href="css/app.css" rel="stylesheet">
     <link href="css/panel/style-responsive.css" rel="stylesheet">
+    <link href="components/dropzone/dropzone.css" rel="stylesheet" />
 
     <script src="js/panel/chart-master/Chart.js"></script>
 
@@ -98,7 +99,7 @@
                   </li>
 
                   <li class="sub-menu">
-                      <a href="lists.html" >
+                      <a ui-sref="lists" >
                           <i class="fa fa-desktop"></i>
                           <span>Listas</span>
                       </a>
@@ -159,7 +160,9 @@
 
     <!--script for this page-->
     <script src="js/panel/sparkline-chart.js"></script>
-	<script src="js/panel/zabuto_calendar.js"></script>
+	  <script src="js/panel/zabuto_calendar.js"></script>
+    <script src="components/dropzone/dropzone.js"></script>
+    <script src="components/id3/id3-minimized.js"></script>
 
 	<script type="text/javascript">
         $(document).ready(function () {

@@ -107,3 +107,23 @@ fieldset[disabled] .btn-xl.active {
     color: #FF9900;
     background-color: #fff;
 }
+
+.mr-5{
+  margin-right: 5px;
+}
+
+.pr-10{
+  padding-right: 10px;
+}
+
+.pr-20{
+  padding-right: 20px;
+}
+
+.mt-10{
+  margin-top: 10px;
+}
+
+.form-panel{
+  padding-right: 25px !important;
+}

@@ -104,4 +104,25 @@ angular.module('jukebuzz')
           $route.reload();
         }
     };
-}]);
+}])
+.factory('id3Reader', function(){
+  function loadUrl(url, callback, reader) {
+    ID3.loadTags(url, function() {
+        var tags = ID3.getAllTags(url);
+        tags.filename = url;
+        if( callback ) { callback(tags); };
+    },
+    {tags: ["artist", "title", "album", "year", "comment", "track", "genre", "lyrics", "picture"],
+     dataReader: reader});
+  }
+
+  function loadFromFile(file, callback) {
+    var url = file.urn ||file.name;
+    loadUrl(url, callback, FileAPIReader(file));
+  }
+
+  return {
+    loadUrl: loadUrl,
+    loadFromFile: loadFromFile
+  };
+});
