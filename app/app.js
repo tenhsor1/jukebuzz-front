@@ -56,6 +56,18 @@ angular.module('jukebuzz', [
         templateUrl: 'panel/partials/list-form.html',
         parent: 'panel',
         controller:'ListCtrl',
+    })
+    .state('jukeboxes', {
+        url: "/jukeboxes/",
+        templateUrl: 'panel/partials/jukeboxes.html',
+        parent: 'panel',
+        controller:'JukeboxesCtrl',
+    })
+    .state('add-jukebox', {
+        url: "/jukeboxes/new",
+        templateUrl: 'panel/partials/jukebox-form.html',
+        parent: 'panel',
+        controller:'JukeboxCtrl',
     });
 
     $httpProvider.interceptors.push(['$q', '$rootScope', '$location', '$localStorage', '$injector',

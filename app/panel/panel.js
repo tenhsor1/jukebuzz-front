@@ -9,6 +9,7 @@ angular.module('jukebuzz.panel', ['ngRoute'])
   'Auth',
   'urls',
   function($scope, $state, $http, $localStorage, Auth, urls) {
+    $scope.$state = $state;
     $scope.logout = function(){
       Auth.logout(function(){
         $state.go('home');
@@ -137,6 +138,20 @@ angular.module('jukebuzz.panel', ['ngRoute'])
     urls,
     globals) {
 
+    $scope.lists = [];
+    $http.get(urls.BASE_API + '/lists')
+    .then(function(listResults){
+      $scope.lists = listResults.data.data;
+      for(var i in $scope.lists){
+        var m = moment.parseZone($scope.lists[i].createdAt);
+        $scope.lists[i].createdAt = m.format("YYYY-MM-DD HH:mm:ss");
+      }
+
+      console.log($scope.lists);
+    }, function(listError){
+      console.log(listError);
+    });
+
   }])
 .controller('ListCtrl', [
   '$scope',
@@ -202,10 +217,18 @@ angular.module('jukebuzz.panel', ['ngRoute'])
       var alternativeArtist = filename.split('-')[0];
       var alternativeTitle = filename.split('-')[1];
 
-      if(alternativeArtist.length <= 0){
+      if(alternativeArtist){
+        if(alternativeArtist.length <= 0){
+          alternativeArtist = filename;
+        }
+      }else{
         alternativeArtist = filename;
       }
-      if(alternativeTitle.length <= 0){
+      if(alternativeTitle){
+        if(alternativeTitle.length <= 0){
+          alternativeTitle = filename;
+        }
+      }else{
         alternativeTitle = filename;
       }
 

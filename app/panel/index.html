@@ -92,16 +92,22 @@
               	  <h5 class="centered">{{user.firstName}}</h5>
 
                   <li class="mt">
-                      <a class="active" href="index.html">
+                      <a ng-class="{'active': $state.is('panel')}" ui-sref='panel'>
                           <i class="fa fa-dashboard"></i>
                           <span>Inicio</span>
                       </a>
                   </li>
-
+                  <!-- ng-class="{'active': $state.includes('lists')}" -->
                   <li class="sub-menu">
-                      <a ui-sref="lists" >
-                          <i class="fa fa-desktop"></i>
+                      <a ng-class="{'active': $state.includes('list')}" ui-sref="lists" >
+                          <i class="fa fa-list"></i>
                           <span>Listas</span>
+                      </a>
+                  </li>
+                  <li class="sub-menu">
+                      <a ng-class="{'active': $state.includes('jukebox')}" ui-sref="jukeboxes" >
+                          <i class="fa fa-music"></i>
+                          <span>Rockolas</span>
                       </a>
                   </li>
 
@@ -163,8 +169,9 @@
 	  <script src="js/panel/zabuto_calendar.js"></script>
     <script src="components/dropzone/dropzone.js"></script>
     <script src="components/id3/id3-minimized.js"></script>
+    <script src="bower_components/moment/min/moment.min.js"></script>
 
-	<script type="text/javascript">
+	<!--script type="text/javascript">
         $(document).ready(function () {
         var unique_id = $.gritter.add({
             // (string | mandatory) the heading of the notification
@@ -183,9 +190,9 @@
 
         return false;
         });
-	</script>
+	</script-->
 
-	<script type="application/javascript">
+	<!--script type="application/javascript">
         $(document).ready(function () {
             $("#date-popover").popover({html: true, trigger: "manual"});
             $("#date-popover").hide();
@@ -216,7 +223,7 @@
             var to = $("#" + id).data("to");
             console.log('nav ' + nav + ' to: ' + to.month + '/' + to.year);
         }
-    </script>
+    </script-->
 
 
   </body>
