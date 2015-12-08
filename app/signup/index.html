@@ -1,0 +1,202 @@
+<!-- Custom CSS -->
+<link href="css/home.css" rel="stylesheet">
+
+<!-- Custom Fonts -->
+<link href="components/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+<link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
+<link href='https://fonts.googleapis.com/css?family=Kaushan+Script' rel='stylesheet' type='text/css'>
+<link href='https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+<link href='https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700' rel='stylesheet' type='text/css'>
+
+<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+<!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+<![endif]-->
+
+<!-- Navigation -->
+<nav class="navbar navbar-solid navbar-default navbar-fixed-top">
+    <div class="container">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand page-scroll" href="#page-top">Jukebuzz</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li class="hidden">
+                    <a href="#page-top"></a>
+                </li>
+                <li>
+                    <a class="page-scroll" href="#services">Cómo Funciona</a>
+                </li>
+                <li>
+                    <a class="page-scroll" href="#about">About</a>
+                </li>
+
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container-fluid -->
+</nav>
+<section id="signup">
+    <div class="container">
+        <h1 class="well">Formulario de Registro</h1>
+        <div class="col-lg-12 well">
+            <div class="row">
+                <form name="form" ng-submit="submit()" accessibleForm novalidate>
+                    <div class="col-sm-12">
+                        <div class="row">
+                            <div class="col-sm-6 form-group" ng-class="{ 'has-error' : (form.firstName.$invalid && form.firstName.$touched) || (form.$submitted && form.firstName.$invalid) }">
+                                <label>Nombre</label>
+                                <input type="text" ng-model="user.firstName" name="firstName" placeholder="Bruce" class="form-control" ng-required="true" ng-minlength="2" ng-maxlength="45">
+                            </div>
+                            <div class="col-sm-6 form-group" ng-class="{ 'has-error' : (form.lastName.$invalid && form.lastName.$touched) || (form.$submitted && form.lastName.$invalid) }">
+                                <label>Apellido(s)</label>
+                                <input type="text" ng-model="user.lastName" name="lastName" placeholder="Springsteen" class="form-control" ng-required="true" ng-minlength="2" ng-maxlength="45">
+                            </div>
+                        </div>
+                        <div class="row row-error">
+                            <div class="col-sm-6">
+                                <div class="col-error" ng-messages="form.firstName.$error" ng-if="form.$submitted && form.firstName.$error || form.firstName.$touched && form.firstName.$error" >
+                                    <div ng-messages-include="messages.html"></div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="col-error" ng-messages="form.lastName.$error" ng-if="form.$submitted && form.lastName.$error || form.lastName.$touched && form.lastName.$error" >
+                                    <div ng-messages-include="messages.html"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12 form-group" ng-class="{ 'has-error' : (form.address.$invalid && form.address.$touched) || (form.$submitted && form.address.$invalid) }">
+                                <label>Dirección</label>
+                                <input type="text" ng-model="user.address" name="address" placeholder="Evergreen 123, Springfield" class="form-control" ng-required="true" ng-minlength="10" ng-maxlength="100">
+                            </div>
+                        </div>
+                        <div class="row row-error">
+                            <div class="col-sm-12 col-error" ng-messages="form.address.$error" ng-if="form.$submitted && form.address.$error || form.address.$touched && form.address.$error" >
+                                <div ng-messages-include="messages.html"></div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                             <div class="col-sm-5 form-group" ng-class="{ 'has-error' : (form.country.$invalid && form.country.$touched) || (form.$submitted && form.country.$invalid) }">
+                                <label>País</label>
+                                <select class="form-control" name="country" ng-model="user.country" ng-options="country.id as country.name for country in countries" ng-change="populateStates()" ng-required="true">
+                                    <option value="">Selecciona</option>
+                                </select>
+                            </div>
+                            <div class="col-sm-5 form-group" ng-class="{ 'has-error' : (form.state.$invalid && form.state.$touched) || (form.$submitted && form.state.$invalid) }">
+                                <label>Estado</label>
+                                <select class="form-control" name="state" ng-model="user.stateId" ng-options="state.id as state.name for state in states" ng-required="true">
+                                    <option value="">Selecciona</option>
+                                </select>
+                            </div>
+                            <div class="col-sm-2 form-group">
+                                <label>C.P.</label>
+                                <input type="text" placeholder="Enter Zip Code Here.." class="form-control">
+                            </div>
+                        </div>
+                        <div class="row row-error">
+                            <div class="col-sm-5">
+                                <div class="col-error" ng-messages="form.country.$error" ng-if="form.$submitted && form.country.$error || form.country.$touched && form.country.$error" >
+                                    <div ng-messages-include="messages.html"></div>
+                                </div>
+                            </div>
+                            <div class="col-sm-5">
+                                <div class="col-error" ng-messages="form.state.$error" ng-if="form.$submitted && form.state.$error || form.state.$touched && form.state.$error" >
+                                    <div ng-messages-include="messages.html"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group" ng-class="{ 'has-error' : (form.email.$invalid && form.email.$touched) || (form.$submitted && form.email.$invalid) }">
+                            <label>Email</label>
+                            <input type="email" name="email" ng-model="user.email" placeholder="bruce@springsteen.com" class="form-control" ng-required="true" ng-email="true">
+                        </div>
+                        <div class="row row-error">
+                            <div class="col-sm-12 col-error" ng-messages="form.email.$error" ng-if="form.$submitted && form.email.$error || form.email.$touched && form.email.$error" >
+                                <div ng-messages-include="messages.html"></div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6 form-group" ng-class="{ 'has-error' : (form.password.$invalid && form.password.$touched) || (form.$submitted && form.password.$invalid) }">
+                                <label>Password</label>
+                                <input  type="password" name="password" ng-model="user.password" class="form-control" ng-required="true" ng-minlength="6" ng-maxlength="64">
+                            </div>
+                            <div class="col-sm-6 form-group" ng-class="{ 'has-error' : (form.passwordVerify.$invalid && form.passwordVerify.$touched) || (form.$submitted && form.passwordVerify.$invalid) }">
+                                <label>Password (otra vez)</label>
+                                <input type="password" name="passwordVerify" ng-model="user.passwordVerify" class="form-control" ng-required="true" ng-minlength="6" ng-maxlength="64"d compare-to="user.password">
+                            </div>
+                        </div>
+                        <div class="row row-error">
+                            <div class="col-sm-6">
+                                <div class="col-error" ng-messages="form.password.$error" ng-if="form.$submitted && form.password.$error || form.password.$touched && form.password.$error" required="true" ng-minlength="6" ng-maxlength="64" >
+                                    <div ng-messages-include="messages.html"></div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="col-error" ng-messages="form.passwordVerify.$error" ng-if="form.$submitted && form.passwordVerify.$error || form.passwordVerify.$touched && form.passwordVerify.$error" >
+                                    <div ng-messages-include="messages.html"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-2">
+                                <button type="submit" class="btn btn-md btn-xl">Registrarse</button>
+                            </div>
+                            <div class="col-sm-10">
+                                <div class="alert hidden alert-danger" ng-class="{'hidden': !form.errorMessage}">{{form.errorMessage}}</div>
+                            </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4">
+                <span class="copyright">Copyright &copy; Jukebuzz 2015</span>
+            </div>
+            <div class="col-md-4">
+                <ul class="list-inline social-buttons">
+                    <li><a href="#"><i class="fa fa-twitter"></i></a>
+                    </li>
+                    <li><a href="#"><i class="fa fa-facebook"></i></a>
+                    </li>
+                    <li><a href="#"><i class="fa fa-youtube"></i></a>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-md-4">
+                <ul class="list-inline quicklinks">
+                    <li><a href="#">Política de Privacidad</a>
+                    </li>
+                    <li><a href="#">Términos de uso</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- Plugin JavaScript -->
+<script src="http://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
+<script src="js/classie.js"></script>
+<script src="js/cbpAnimatedHeader.js"></script>
+
+
+<!-- Custom Theme JavaScript -->
+<script src="js/main.js"></script>

@@ -1,0 +1,129 @@
+/* app css stylesheet */
+
+.menu {
+  list-style: none;
+  border-bottom: 0.1em solid black;
+  margin-bottom: 2em;
+  padding: 0 0 0.5em;
+}
+
+.menu:before {
+  content: "[";
+}
+
+.menu:after {
+  content: "]";
+}
+
+.menu > li {
+  display: inline;
+}
+
+.menu > li:before {
+  content: "|";
+  padding-right: 0.3em;
+}
+
+.menu > li:nth-child(1):before {
+  content: "";
+  padding: 0;
+}
+
+.modal-header{
+  background-color: #FF9900;
+  color: #FFFFFF;
+  border-top-right-radius: 5px;
+  border-top-left-radius: 5px;
+}
+
+.col-error{
+    color: #843534;
+    margin-top: -17px;
+}
+.col-error p{
+    font-size: 11px;
+    text-align: right;
+}
+
+.btn-sm {
+    padding: 5px 10px !important;
+    font-size: 14px !important;
+    font-weight: 500 !important;
+}
+
+.btn-md {
+    padding: 10px 20px !important;
+}
+
+.btn-xl {
+    padding: 20px 40px;
+    border-color: #FF9900;
+    border-radius: 3px;
+    text-transform: uppercase;
+    font-family: Montserrat,"Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: #fff;
+    background-color: #FF9900;
+}
+
+.btn-xl:hover,
+.btn-xl:focus,
+.btn-xl:active,
+.btn-xl.active,
+.open .dropdown-toggle.btn-xl {
+    border-color: #E58A00;
+    color: #fff;
+    background-color: #E58A00;
+}
+
+.btn-xl:active,
+.btn-xl.active,
+.open .dropdown-toggle.btn-xl {
+    background-image: none;
+}
+
+
+.btn-xl.disabled,
+.btn-xl[disabled],
+fieldset[disabled] .btn-xl,
+.btn-xl.disabled:hover,
+.btn-xl[disabled]:hover,
+fieldset[disabled] .btn-xl:hover,
+.btn-xl.disabled:focus,
+.btn-xl[disabled]:focus,
+fieldset[disabled] .btn-xl:focus,
+.btn-xl.disabled:active,
+.btn-xl[disabled]:active,
+fieldset[disabled] .btn-xl:active,
+.btn-xl.disabled.active,
+.btn-xl[disabled].active,
+fieldset[disabled] .btn-xl.active {
+    border-color: #FF9900;
+    background-color: #FF9900;
+}
+
+.btn-xl .badge {
+    color: #FF9900;
+    background-color: #fff;
+}
+
+.mr-5{
+  margin-right: 5px;
+}
+
+.pr-10{
+  padding-right: 10px;
+}
+
+.pr-20{
+  padding-right: 20px;
+}
+
+.mt-10{
+  margin-top: 10px;
+}
+
+.form-panel{
+  padding-right: 25px !important;
+}
