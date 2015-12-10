@@ -1,0 +1,67 @@
+<h3><i class="fa fa-angle-right"></i> Rockola</h3>
+<div class="form-panel">
+    <h4 class="mb"><i class="fa fa-angle-right"></i>{{formJukebox.action}} Rockola</h4>
+    <form name="form" class="form-horizontal style-form" ng-submit="submit()" novalidate>
+      <div class="form-group" ng-class="{ 'has-error' : (form.name.$invalid && form.name.$touched) || (form.$submitted && form.name.$invalid) }">
+          <label class="col-sm-2 col-sm-2 control-label">Nombre</label>
+          <div class="col-sm-10">
+              <input type="text" ng-model="jukebox.name" name="name" placeholder="My Jukebox" class="form-control" ng-required="true" ng-minlength="4" ng-maxlength="45">
+          </div>
+      </div>
+      <div class="row row-error">
+        <div class="col-lg-12 col-error" ng-messages="form.name.$error" ng-if="form.$submitted && form.name.$error || form.name.$touched && form.name.$error" >
+              <div ng-messages-include="messages.html"></div>
+        </div>
+      </div>
+      <div class="form-group" ng-class="{ 'has-error' : (form.expirationDate.$invalid && form.expirationDate.$touched) || (form.$submitted && form.expirationDate.$invalid) }">
+          <label class="col-sm-2 col-sm-2 control-label">Fecha de caducidad</label>
+          <div class="col-sm-10">
+              <input type="text" ng-model="jukebox.expirationDate" name="expirationDate" placeholder="2016-02-23" class="jquery-picker form-control" ng-required="true">
+          </div>
+      </div>
+      <div class="row row-error">
+        <div class="col-lg-12 col-error" ng-messages="form.expirationDate.$error" ng-if="form.$submitted && form.expirationDate.$error || form.expirationDate.$touched && form.expirationDate.$error" >
+              <div ng-messages-include="messages.html"></div>
+        </div>
+      </div>
+      <div class="form-group">
+          <label class="col-sm-2 control-label">Hora de Inicio</label>
+          <div class="col-sm-4">
+              <input type="number" ng-model="jukebox.startHour" name="startHour" placeholder="22" class="form-control pull-left" style="width:40% !important;" ng-required="true" min="0" max="23">
+              <label class="pull-left" style="font-size: 24px;">:</label>
+              <input type="number" ng-model="jukebox.startMin" name="startMin" placeholder="20" class="form-control pull-left" style="width:40% !important;" ng-required="true" min="0" max="59">
+          </div>
+          <label class="col-sm-2 control-label">Hora de Fin</label>
+          <div class="col-sm-4">
+              <input type="number" ng-model="jukebox.endHour" name="endHour" placeholder="22" class="form-control pull-left" style="width:40% !important;" ng-required="true" min="0" max="23">
+              <label class="pull-left" style="font-size: 24px;">:</label>
+              <input type="number" ng-model="jukebox.endMin" name="endMin" placeholder="20" class="form-control pull-left" style="width:40% !important;" ng-required="true" min="0" max="59">
+          </div>
+      </div>
+      <div class="row mt-10">
+            <div class="col-sm-10">
+                <div class="alert hidden alert-danger" ng-class="{'hidden': !form.errorMessage}">{{form.errorMessage}}</div>
+                <div class="alert alert-warning" ng-class="{'hidden': !formList.warningMessage}">{{formList.warningMessage}}</div>
+            </div>
+            <div class="col-sm-2 text-right">
+                <button type="submit" class="btn btn-sm btn-xl">Guardar</button>
+            </div>
+
+      </div>
+    </form>
+
+<div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="titleLabel" data-keyboard="false" data-backdrop="static">
+      <div class="modal-dialog" role="document">
+          <div class="modal-content">
+              <div class="modal-header">
+              <h4 class="modal-title" id="titleLabel">Guardar Lista</h4>
+              </div>
+              <div class="modal-body">
+                  <span class="alert alert-success">La lista '{{newList.name}}' se ha guardado correctamente</span>
+              </div>
+              <div class="modal-footer">
+                  <button type="button" ng-click="reloadLists()" class="btn btn-xl btn-sm">Aceptar</button>
+              </div>
+          </div>
+      </div>
+</div>

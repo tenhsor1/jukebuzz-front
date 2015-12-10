@@ -17,7 +17,11 @@
   <link rel="stylesheet" href="bower_components/angular-loading-bar/build/loading-bar.css">
   <link rel="stylesheet" href="css/app.css">
   <link href='https://fonts.googleapis.com/css?family=Kaushan+Script' rel='stylesheet' type='text/css'>
+  <link href="components/jquery-ui/css/jquery-ui.css" rel="stylesheet" />
+  <link href="components/jquery-ui/css/jquery-ui.theme.css" rel="stylesheet" />
+
   <script src="bower_components/html5-boilerplate/dist/js/vendor/modernizr-2.8.3.min.js"></script>
+
 </head>
 <body id="page-top">
   <!--[if lt IE 7]>
@@ -30,6 +34,8 @@
   <script src="//ajax.googleapis.com/ajax/libs/angularjs/x.x.x/angular.min.js"></script>
   -->
   <script src="bower_components/jquery/dist/jquery.js"></script>
+  <script src="components/jquery-ui/jquery-ui.min.js"></script>
+
   <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
   <script src="bower_components/angular/angular.js"></script>
   <script src="bower_components/angular-route/angular-route.js"></script>
@@ -41,6 +47,7 @@
   <script src="home/home.js"></script>
   <script src="signup/signup.js"></script>
   <script src="panel/panel.js"></script>
+
   <script>
   window.onhashchange = function() {
       // The hiding animation was causing a race condition that resulted
@@ -48,6 +55,11 @@
       // sometimes, so I had to explicitly remove it.
     $('.modal-backdrop').remove();
   };
+  $(function() {
+    setTimeout(function(){
+      $(".jquery-picker").datepicker({ dateFormat: 'yy-mm-dd' });
+    }, 400);
+  });
   </script>
 </body>
 </html>

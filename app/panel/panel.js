@@ -144,7 +144,7 @@ angular.module('jukebuzz.panel', ['ngRoute'])
       $scope.lists = listResults.data.data;
       for(var i in $scope.lists){
         var m = moment.parseZone($scope.lists[i].createdAt);
-        $scope.lists[i].createdAt = m.format("YYYY-MM-DD HH:mm:ss");
+        $scope.lists[i].createdAt = m.format("DD/MM/YYYY HH:mm:ss");
       }
 
       console.log($scope.lists);
@@ -279,4 +279,92 @@ angular.module('jukebuzz.panel', ['ngRoute'])
       }
     };
 
+  }])
+.controller('JukeboxesCtrl', [
+  '$scope',
+  '$state',
+  '$stateParams',
+  '$http',
+  '$localStorage',
+  'Auth',
+  'urls',
+  'globals',
+  function($scope,
+    $state,
+    $stateParams,
+    $http,
+    $localStorage,
+    Auth,
+    urls,
+    globals) {
+
+    $scope.jukeboxes = [];
+    $http.get(urls.BASE_API + '/jukeboxes')
+    .then(function(jukeboxesResults){
+      $scope.jukeboxes = jukeboxesResults.data.data;
+      for(var i in $scope.jukeboxes){
+        var m = moment.parseZone($scope.jukeboxes[i].expirationDate);
+        $scope.jukeboxes[i].expirationDate = m.format("DD/MM/YYYY");
+      }
+
+      console.log($scope.jukeboxes);
+    }, function(jukeboxError){
+      console.log(jukeboxError);
+    });
+
+  }])
+.controller('JukeboxCtrl', [
+  '$scope',
+  '$state',
+  '$stateParams',
+  '$http',
+  '$localStorage',
+  '$timeout',
+  'Auth',
+  'urls',
+  'globals',
+  'id3Reader',
+  function($scope,
+    $state,
+    $stateParams,
+    $http,
+    $localStorage,
+    $timeout,
+    Auth,
+    urls,
+    globals,
+    id3Reader) {
+
+    $scope.list = {};
+    $scope.list.songs = [];
+    $scope.formList = {};
+    $scope.formList.warningMessage = '';
+    if($stateParams.action == 'edit'){
+      $scope.formList.action = 'Editar';
+    }else{
+      $scope.formList.action = 'Nueva';
+    }
+
+    $scope.submit = function(){
+      if ($scope.form.$invalid) {
+        $scope.form.errorMessage = 'Se encontraron errores en el formulario';
+        return;
+      }else if($scope.list.songs.length == 0){
+        $scope.form.errorMessage = 'Agrega al menos una canción a tu lista de canciones';
+      }else{
+        //if the form has valid information, then send the new list to the api
+        console.log($scope.list);
+        $http.post(urls.BASE_API + '/lists', $scope.list)
+        .then(function(listResult){
+          $scope.newList = listResult.data.data;
+          $('#successModal').modal('show');
+        }, function(listError){
+          console.log(listError);
+        });
+      }
+    };
+
+    $scope.reloadJukeboxes = function(){
+      $state.go('jukeboxes');
+    };
   }]);
