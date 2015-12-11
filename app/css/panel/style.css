@@ -2276,3 +2276,55 @@ label {
     width: 50px;
 }
 
+/************************ jukebox form template *******************/
+
+.list-droppable{
+    height:300px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    border: 2px solid #FF9900;
+    margin-left: -15px;
+    margin-right: -15px;
+    background-color: #FFF4DF;
+    z-index: -1;
+    padding: 5px;
+}
+
+.container-draggable{
+    height: 300px;
+    border: 2px #0066B2 solid;
+    background-color: #EBF1FF;
+}
+
+.list-draggable{
+    padding: 5px;
+}
+
+.title-draggable{
+    background-color: #0066B2;
+    color: #FFFFFF;
+    font-size: 18px;
+    font-weight: bold;
+    padding: 6px;
+}
+
+.elem-draggable{
+    padding: 5px 9px;
+    background-color: #376FFF;
+    border-radius: 2px;
+    margin-bottom: 4px;
+    cursor: pointer;
+    color: #FFFFFF;
+    font-size:14px;
+    font-weight: bold;
+}
+
+.elem-droppable{
+    padding: 5px 9px;
+    background-color: #FF9900;
+    border-radius: 2px;
+    margin-bottom: 4px;
+    color: #FFFFFF;
+    font-size:14px;
+    font-weight: bold;
+}

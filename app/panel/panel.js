@@ -335,18 +335,70 @@ angular.module('jukebuzz.panel', ['ngRoute'])
     globals,
     id3Reader) {
 
-    $scope.list = {};
-    $scope.list.songs = [];
-    $scope.formList = {};
-    $scope.formList.warningMessage = '';
+    $scope.jukebox = {};
+    $scope.jukebox.lists = [];
+    $scope.formJukebox = {};
+    $scope.formJukebox.warningMessage = '';
     if($stateParams.action == 'edit'){
-      $scope.formList.action = 'Editar';
+      $scope.formJukebox.action = 'Editar';
     }else{
-      $scope.formList.action = 'Nueva';
+      $scope.formJukebox.action = 'Nueva';
     }
+
+    $(".jquery-picker").datepicker({ dateFormat: 'yy-mm-dd', minDate: 0 });
+    $(document).ready(function(){
+      $( ".list-droppable" ).droppable({
+        accept: '.elem-draggable',
+        drop: function(event, ui) {
+          ui.draggable.removeClass('elem-draggable');
+          ui.draggable.addClass('elem-droppable');
+          var $closeButton = $('<a>').addClass('elem-close').
+                                      css('cursor', 'pointer').
+                                      append($('<i>').addClass('fa').
+                                      addClass('fa-remove').
+                                      addClass('pull-right'));
+          $scope.jukebox.lists.push(ui.draggable.attr('data-list-id'));
+          ui.draggable.append($closeButton);
+          ui.draggable.draggable('disable');
+        },
+      });
+      $(".elem-draggable").draggable({
+        helper: "clone",
+        scroll: false,
+        stack: ".elem-draggable",
+        start : function(event, ui) {
+          ui.helper.width($(this).width());
+        }
+      });
+      $(".elem-draggable").sortable();
+      $( ".list-droppable" ).on( "drop", function( event, ui ) {
+        $(".list-droppable").append (ui.draggable);
+      });
+      $(".list-droppable").on('click', '.elem-droppable .elem-close', function() {
+        var $draggable = $(this).parent().clone();
+        $draggable.draggable({
+          helper: "clone",
+          scroll: false,
+          stack: ".elem-draggable",
+          start : function(event, ui) {
+            ui.helper.width($(this).width());
+          }
+        });
+        $draggable.removeClass('elem-droppable');
+        $draggable.addClass('elem-draggable');
+        $draggable.find('a.elem-close').remove();
+        $draggable.find('input.input-list-id').remove();
+        $draggable.draggable('enable');
+        $('.list-draggable').append($draggable);
+        var index = $scope.jukebox.lists.indexOf($draggable.attr('data-list-id'));
+        $scope.jukebox.lists.splice(index, 1);
+        $(this).parent().remove();
+      });
+    });
 
     $scope.submit = function(){
       if ($scope.form.$invalid) {
+        console.log($scope.jukebox.lists);
         $scope.form.errorMessage = 'Se encontraron errores en el formulario';
         return;
       }else if($scope.list.songs.length == 0){
