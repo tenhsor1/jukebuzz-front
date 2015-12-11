@@ -38,10 +38,29 @@
               <input type="number" ng-model="jukebox.endMin" name="endMin" placeholder="20" class="form-control pull-left" style="width:40% !important;" ng-required="true" min="0" max="59">
           </div>
       </div>
+
+      <div class="row">
+        <div class="col-lg-6">
+          <div class="title-draggable">Tus listas</div>
+          <div class="container-draggable">
+            <ul class="list-draggable">
+              <li class="elem-draggable" data-list-id="1">Test</li>
+              <li class="elem-draggable" data-list-id="2">Test 2</li>
+              <li class="elem-draggable" data-list-id="3">Test 3</li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-lg-6">
+          <div class="song-previews-title">Listas de la Rockola</div>
+          <div class="list-droppable">
+          </div>
+        </div>
+      </div>
+
       <div class="row mt-10">
             <div class="col-sm-10">
                 <div class="alert hidden alert-danger" ng-class="{'hidden': !form.errorMessage}">{{form.errorMessage}}</div>
-                <div class="alert alert-warning" ng-class="{'hidden': !formList.warningMessage}">{{formList.warningMessage}}</div>
+                <div class="alert alert-warning" ng-class="{'hidden': !formJukebox.warningMessage}">{{formJukebox.warningMessage}}</div>
             </div>
             <div class="col-sm-2 text-right">
                 <button type="submit" class="btn btn-sm btn-xl">Guardar</button>
