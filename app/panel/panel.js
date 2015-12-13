@@ -336,6 +336,7 @@ angular.module('jukebuzz.panel', ['ngRoute'])
     id3Reader) {
 
     $scope.jukebox = {};
+    $scope.lists = [];
     $scope.jukebox.lists = [];
     $scope.formJukebox = {};
     $scope.formJukebox.warningMessage = '';
@@ -345,8 +346,35 @@ angular.module('jukebuzz.panel', ['ngRoute'])
       $scope.formJukebox.action = 'Nueva';
     }
 
+    $http.get(urls.BASE_API + '/lists')
+    .then(function(listsResults){
+      $scope.lists = listsResults.data.data;
+      for (var i in $scope.lists) {
+          if ($scope.lists.hasOwnProperty(i)) {
+            var list = $scope.lists[i];
+            var $elemList = $('<li>').html(list.name)
+                            .addClass('elem-draggable')
+                            .attr('data-list-id', list.id);
+            $elemList.draggable({
+              helper: "clone",
+              scroll: false,
+              stack: ".elem-draggable",
+              start : function(event, ui) {
+                ui.helper.width($(this).width());
+              }
+            });
+            $elemList.sortable();
+            $('.list-draggable').append($elemList);
+          }
+      }
+    }, function(listsError){
+      console.log(listsError);
+    });
+
     $(".jquery-picker").datepicker({ dateFormat: 'yy-mm-dd', minDate: 0 });
     $(document).ready(function(){
+
+
       $( ".list-droppable" ).droppable({
         accept: '.elem-draggable',
         drop: function(event, ui) {
@@ -362,15 +390,7 @@ angular.module('jukebuzz.panel', ['ngRoute'])
           ui.draggable.draggable('disable');
         },
       });
-      $(".elem-draggable").draggable({
-        helper: "clone",
-        scroll: false,
-        stack: ".elem-draggable",
-        start : function(event, ui) {
-          ui.helper.width($(this).width());
-        }
-      });
-      $(".elem-draggable").sortable();
+
       $( ".list-droppable" ).on( "drop", function( event, ui ) {
         $(".list-droppable").append (ui.draggable);
       });
@@ -398,20 +418,24 @@ angular.module('jukebuzz.panel', ['ngRoute'])
 
     $scope.submit = function(){
       if ($scope.form.$invalid) {
-        console.log($scope.jukebox.lists);
         $scope.form.errorMessage = 'Se encontraron errores en el formulario';
         return;
-      }else if($scope.list.songs.length == 0){
-        $scope.form.errorMessage = 'Agrega al menos una canción a tu lista de canciones';
+      }else if($scope.jukebox.lists.length == 0){
+        $scope.form.errorMessage = 'Agrega al menos una lista a tu rockola';
+      }else if(!$localStorage.place){
+        $scope.form.errorMessage = 'Selecciona un lugar primero!';
       }else{
         //if the form has valid information, then send the new list to the api
-        console.log($scope.list);
-        $http.post(urls.BASE_API + '/lists', $scope.list)
-        .then(function(listResult){
-          $scope.newList = listResult.data.data;
+        $scope.jukebox.startTime = $scope.jukebox.startHour + ':' + $scope.jukebox.startMin;
+        $scope.jukebox.endTime = $scope.jukebox.endHour + ':' + $scope.jukebox.endMin;
+        $scope.jukebox.placeId =  $localStorage.place;
+        console.log($scope.jukebox);
+        $http.post(urls.BASE_API + '/jukeboxes', $scope.jukebox)
+        .then(function(jukeboxResult){
+          $scope.newJukebox = jukeboxResult.data.data;
           $('#successModal').modal('show');
-        }, function(listError){
-          console.log(listError);
+        }, function(jukeboxError){
+          console.log(jukeboxError);
         });
       }
     };
