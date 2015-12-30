@@ -6,9 +6,10 @@ angular.module('jukebuzz.panel', ['ngRoute'])
   '$state',
   '$http',
   '$localStorage',
+  '$interval',
   'Auth',
   'urls',
-  function($scope, $state, $http, $localStorage, Auth, urls) {
+  function($scope, $state, $http, $localStorage, $interval, Auth, urls) {
     $scope.$state = $state;
     $scope.logout = function(){
       Auth.logout(function(){
@@ -16,8 +17,28 @@ angular.module('jukebuzz.panel', ['ngRoute'])
       });
     };
 
+    $scope.setPlayed = function(song){
+      $http.put(urls.BASE_API + '/votes/' + song.id)
+      .success(function(result, status){
+        $scope.votedSongs = $.grep($scope.votedSongs, function(e){
+             return e.id != song.id;
+        });
+      })
+      .error(function(result, status){
+        alert('Algo salió mal, por favor intenta mas tarde');
+      });
+    };
+
+    function getVotedSongs(){
+      $http.get(urls.BASE_API + '/places/' + $localStorage.place + '/votes')
+      .success(function(result, status){
+        $scope.votedSongs = result.data;
+      });
+    }
+
     //get the user information
     $scope.user = {};
+    $scope.votedSongs = [];
     $http.get(urls.BASE_API + '/user')
     .then(function(userResponse){ //get the user info and add a promise for getting places
       $scope.user = userResponse.data.data;
@@ -30,11 +51,12 @@ angular.module('jukebuzz.panel', ['ngRoute'])
         id: '+',
         name: 'Agrega un lugar'
       });
-      console.log($localStorage.place);
       if($localStorage.place){
         $scope.placeSelected = $localStorage.place;
       }
     });
+
+
 
     $scope.changePlace = function(){
       if($scope.placeSelected == '+'){
@@ -48,6 +70,14 @@ angular.module('jukebuzz.panel', ['ngRoute'])
     if(!$scope.token){
       $state.go("signin");
     }
+
+    $http.get(urls.BASE_API + '/places/' + $localStorage.place + '/votes')
+    .then(function(songsResponse){
+      $scope.votedSongs = songsResponse.data.data;
+
+    });
+
+    $interval(getVotedSongs, 1000);
   }
 ])
 .controller('PlaceCtrl', [
@@ -139,7 +169,7 @@ angular.module('jukebuzz.panel', ['ngRoute'])
     globals) {
 
     $scope.lists = [];
-    $http.get(urls.BASE_API + '/lists')
+    $http.get(urls.BASE_API + '/lists?adminId=' + $localStorage.userId)
     .then(function(listResults){
       $scope.lists = listResults.data.data;
       for(var i in $scope.lists){
@@ -299,7 +329,7 @@ angular.module('jukebuzz.panel', ['ngRoute'])
     globals) {
 
     $scope.jukeboxes = [];
-    $http.get(urls.BASE_API + '/jukeboxes')
+    $http.get(urls.BASE_API + '/jukeboxes?placeId=' + $localStorage.place)
     .then(function(jukeboxesResults){
       $scope.jukeboxes = jukeboxesResults.data.data;
       for(var i in $scope.jukeboxes){
@@ -346,7 +376,7 @@ angular.module('jukebuzz.panel', ['ngRoute'])
       $scope.formJukebox.action = 'Nueva';
     }
 
-    $http.get(urls.BASE_API + '/lists')
+    $http.get(urls.BASE_API + '/lists?adminId=' + $localStorage.userId)
     .then(function(listsResults){
       $scope.lists = listsResults.data.data;
       for (var i in $scope.lists) {
