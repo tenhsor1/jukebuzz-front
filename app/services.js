@@ -49,6 +49,7 @@ angular.module('jukebuzz')
         tokenClaims = {};
         delete $localStorage.token;
         delete $localStorage.place;
+        delete $localStorage.userId;
         success();
       },
       getTokenClaims: function(){

@@ -124,10 +124,38 @@
           <section class="wrapper">
 
               <div class="row">
-                  <div class="col-lg-9" ui-view>
-                  </div>
+                  <div class="col-lg-9" ui-view><!-- /////////////////// UI-VIEW //////////////// -->
+
+                    <h3><i class="fa fa-angle-right"></i> Rockolas Activas</h3>
+                    <div class="col-md-12">
+                      <div class="col-md-12 content-panel">
+                        <div class="col-md-12 top-votes">
+                          <table class="top-votes-list">
+                            <thead>
+                              <tr>
+                                <th colspan="2">Top votaciones actuales</th>
+                                <th style="text-align:center !important;">Votos</th>
+                                <th></th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr ng-repeat="song in votedSongs track by song.id">
+                                <td width="10%" align="center"><img src="img/jukebuzz-icon-orange.png" width="30" class="img-circle"></td>
+                                <td>
+                                  <div class="p-title"><label class="label-title">Canción: &nbsp;</label>{{song.title}}</div>
+                                  <div class="p-title"><label class="label-title">Artista: &nbsp;</label>{{song.artist}}</div>
+                                </td>
+                                <td align="center">{{song.votes}}</td>
+                                <td align="center"><a href="#" class="button-played" ng-click="setPlayed(song)"><i class="fa fa-check-square"></i></a></td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    </div>
 
 
+                  </div><!-- /////////////////// UI-VIEW //////////////// -->
       <!-- **********************************************************************************************************************************************************
       RIGHT SIDEBAR CONTENT
       *********************************************************************************************************************************************************** -->

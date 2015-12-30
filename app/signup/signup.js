@@ -48,6 +48,7 @@ angular.module('jukebuzz.signup', ['ngRoute'])
             //save the token in local storage and redirect to the admin panel
             var data = result.data;
             $localStorage.token = data.token;
+            $localStorage.userId = data.id;
             $state.go("panel");
           },
           function(error, status){

@@ -14,7 +14,10 @@ angular.module('jukebuzz.home', ['ngRoute'])
             //if the user was correctly created, then
             //save the token in local storage and redirect to the admin panel
             var data = result.data;
+            var user = data.user;
             $localStorage.token = data.token;
+            $localStorage.userId = user.id;
+
             $state.go("panel");
           },
           function(error, status){
