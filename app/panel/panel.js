@@ -456,8 +456,13 @@ angular.module('jukebuzz.panel', ['ngRoute'])
         $scope.form.errorMessage = 'Selecciona un lugar primero!';
       }else{
         //if the form has valid information, then send the new list to the api
-        $scope.jukebox.startTime = $scope.jukebox.startHour + ':' + $scope.jukebox.startMin;
-        $scope.jukebox.endTime = $scope.jukebox.endHour + ':' + $scope.jukebox.endMin;
+        var startHour = globals.padZeros($scope.jukebox.startHour, 2);
+        var startMin = globals.padZeros($scope.jukebox.startMin, 2);
+        var endHour = globals.padZeros($scope.jukebox.endHour, 2);
+        var endMin = globals.padZeros($scope.jukebox.endMin, 2);
+
+        $scope.jukebox.startTime = startHour + ':' + startMin;
+        $scope.jukebox.endTime = endHour + ':' + endMin;
         $scope.jukebox.placeId =  $localStorage.place;
         console.log($scope.jukebox);
         $http.post(urls.BASE_API + '/jukeboxes', $scope.jukebox)
