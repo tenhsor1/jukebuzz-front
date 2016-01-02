@@ -198,3 +198,7 @@ fieldset[disabled] .btn-xl.active {
 .top-votes-list .button-played{
   font-size: 20px;
 }
+
+.place-edit{
+  margin-left: 10px;
+}

@@ -45,6 +45,12 @@ angular.module('jukebuzz', [
         parent: 'panel',
         controller:'PlaceCtrl',
     })
+    .state('edit-place', {
+        url: '/places/:placeId',
+        templateUrl: 'panel/partials/place-form.html',
+        controller: 'PlaceCtrl',
+        parent: 'panel',
+    })
     .state('lists', {
         url: "/lists/",
         templateUrl: 'panel/partials/lists.html',
@@ -57,6 +63,12 @@ angular.module('jukebuzz', [
         parent: 'panel',
         controller:'ListCtrl',
     })
+    .state('edit-list', {
+        url: '/lists/:listId',
+        templateUrl: 'panel/partials/list-form.html',
+        controller: 'ListCtrl',
+        parent: 'panel',
+    })
     .state('jukeboxes', {
         url: "/jukeboxes/",
         templateUrl: 'panel/partials/jukeboxes.html',
@@ -68,6 +80,12 @@ angular.module('jukebuzz', [
         templateUrl: 'panel/partials/jukebox-form.html',
         parent: 'panel',
         controller:'JukeboxCtrl',
+    })
+    .state('edit-jukebox', {
+        url: '/jukeboxes/:jukeboxId',
+        templateUrl: 'panel/partials/jukebox-form.html',
+        controller: 'JukeboxCtrl',
+        parent: 'panel',
     });
 
     $httpProvider.interceptors.push(['$q', '$rootScope', '$location', '$localStorage', '$injector',
