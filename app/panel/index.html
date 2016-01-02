@@ -45,22 +45,8 @@
             <!--logo end-->
             <div class="nav notify-row" id="top_menu">
                 <!--  notification start -->
-                <ul class="nav top-menu">
+                <ul class="nav top-menu pull-left">
                     <!-- settings start -->
-                    <li class="dropdown">
-                        <a data-toggle="dropdown" class="dropdown-toggle" href="index.html#">
-                            <i class="fa fa-tasks"></i>
-                            <span class="badge bg-theme">4</span>
-                        </a>
-                    </li>
-                    <!-- settings end -->
-                    <!-- inbox dropdown start-->
-                    <li id="header_inbox_bar" class="dropdown">
-                        <a data-toggle="dropdown" class="dropdown-toggle" href="index.html#">
-                            <i class="fa fa-envelope-o"></i>
-                            <span class="badge bg-theme">5</span>
-                        </a>
-                    </li>
                     <li class="dropdown">
                       <select class="form-control select-orange" ng-model="placeSelected" name="place" ng-options=" place.id as place.name for place in places" ng-change="changePlace()">
                         <option value="">Selecciona un lugar</option>
@@ -68,6 +54,10 @@
                     </li>
                     <!-- inbox dropdown end -->
                 </ul>
+                <div class="pull-right place-edit" ng-show="placeSelected && placeSelected != '+'">
+                  <button class="btn btn-primary btn-sm" ui-sref="edit-place({placeId: placeSelected})"><i class="fa fa-pencil"></i></button>
+                  <button class="btn btn-danger btn-sm" ng-click="deletePlace(placeSelected)"><i class="fa fa-trash-o "></i></button>
+                </div>
                 <!--  notification end -->
             </div>
             <div class="top-menu">

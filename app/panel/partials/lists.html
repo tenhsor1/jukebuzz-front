@@ -22,8 +22,8 @@
                   <td><a href="#">{{list.name}}</a></td>
                   <td class="hidden-phone">{{list.createdAt}}</td>
                   <td>
-                      <button class="btn btn-primary btn-xs"><i class="fa fa-pencil"></i></button>
-                      <button class="btn btn-danger btn-xs"><i class="fa fa-trash-o "></i></button>
+                      <button class="btn btn-primary btn-xs" ui-sref="edit-list({listId: list.id})"><i class="fa fa-pencil"></i></button>
+                      <button class="btn btn-danger btn-xs" ng-click="deleteList(list.id)"><i class="fa fa-trash-o "></i></button>
                   </td>
               </tr>
               </tbody>

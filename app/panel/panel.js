@@ -9,12 +9,30 @@ angular.module('jukebuzz.panel', ['ngRoute'])
   '$interval',
   'Auth',
   'urls',
-  function($scope, $state, $http, $localStorage, $interval, Auth, urls) {
+  'globals',
+  function($scope, $state, $http, $localStorage, $interval, Auth, urls, globals) {
     $scope.$state = $state;
     $scope.logout = function(){
       Auth.logout(function(){
         $state.go('home');
       });
+    };
+
+    $scope.deletePlace = function(placeId){
+      if(window.confirm("¿Estas seguro de querer eliminar este establecimiento?")){
+        $http.delete(urls.BASE_API + '/places/' + placeId)
+        .success(function(result, status){
+          var indexDeleted = globals.findPositionId($scope.places, placeId);
+          console.log($scope.places);
+          if(indexDeleted){
+            $scope.places.splice(indexDeleted, 1);
+          }
+          console.log($scope.places);
+        })
+        .error(function(result, status){
+          alert('Algo salió mal, por favor intenta mas tarde');
+        });
+      }
     };
 
     $scope.setPlayed = function(song){
@@ -98,19 +116,29 @@ angular.module('jukebuzz.panel', ['ngRoute'])
     urls,
     globals) {
     $scope.formPlace = {};
-    if($stateParams.action == 'edit'){
+    $scope.place = {};
+
+    if($stateParams.placeId){
       $scope.formPlace.action = 'Editar';
+      $http.get(urls.BASE_API + '/places/' + $stateParams.placeId)
+      .success(function(result, status){
+        console.log(result);
+        $scope.place = result.data;
+      })
+      .error(function(result, status){
+        console.log(result);
+      });
     }else{
       $scope.formPlace.action = 'Nuevo';
     }
 
     $http.get(urls.BASE_API + '/countries')
-      .success(function(result, status){
-        $scope.countries = result.data;
-      })
-      .error(function(result, status){
-        console.log(result);
-      });
+    .success(function(result, status){
+      $scope.countries = result.data;
+    })
+    .error(function(result, status){
+      console.log(result);
+    });
 
     $scope.populateStates = function(){
       var idCountry = $scope.place.country;
@@ -133,17 +161,32 @@ angular.module('jukebuzz.panel', ['ngRoute'])
         return;
       }else{
         //if the form has valid information, then send the place to the api
-        $http.post(urls.BASE_API + '/places', $scope.place)
-        .then(function(placeResult){
-          $scope.newPlace = placeResult.data.data;
-          $localStorage.place = $scope.newPlace.id;
-          $scope.$parent.places.push($scope.newPlace);
-          $scope.$parent.placeSelected = $localStorage.place;
+        if($stateParams.placeId){
+          $http.put(urls.BASE_API + '/places/' + $stateParams.placeId, $scope.place)
+          .then(function(placeResult){
+            $scope.newPlace = placeResult.data.data;
+            var indexPlace = globals.findPositionId($scope.$parent.places, $stateParams.placeId);
+            console.log(indexPlace);
+            if(indexPlace > -1){
+              $scope.$parent.places[indexPlace] = $scope.newPlace;
+            }
+            $('#successModal').modal('show');
+          }, function(placeError){
+            console.log(placeError);
+          });
+        }else{
+          $http.post(urls.BASE_API + '/places', $scope.place)
+          .then(function(placeResult){
+            $scope.newPlace = placeResult.data.data;
+            $localStorage.place = $scope.newPlace.id;
+            $scope.$parent.places.push($scope.newPlace);
+            $scope.$parent.placeSelected = $localStorage.place;
 
-          $('#successModal').modal('show');
-        }, function(placeError){
-          console.log(placeError);
-        });
+            $('#successModal').modal('show');
+          }, function(placeError){
+            console.log(placeError);
+          });
+        }
       }
     };
     $scope.reloadPanel = function(){
@@ -167,6 +210,22 @@ angular.module('jukebuzz.panel', ['ngRoute'])
     Auth,
     urls,
     globals) {
+
+    $scope.deleteList = function(listId){
+      if(window.confirm("¿Estas seguro de querer eliminar ésta lista?")){
+        $http.delete(urls.BASE_API + '/lists/' + listId)
+        .success(function(result, status){
+          var indexDeleted = globals.findPositionId($scope.lists, listId);
+          if(indexDeleted){
+            $scope.lists.splice(indexDeleted, 1);
+          }
+          console.log($scope.lists);
+        })
+        .error(function(result, status){
+          alert('Algo salió mal, por favor intenta mas tarde');
+        });
+      }
+    }
 
     $scope.lists = [];
     $http.get(urls.BASE_API + '/lists?adminId=' + $localStorage.userId)
@@ -209,28 +268,46 @@ angular.module('jukebuzz.panel', ['ngRoute'])
     $scope.list.songs = [];
     $scope.formList = {};
     $scope.formList.warningMessage = '';
-    if($stateParams.action == 'edit'){
+    if($stateParams.listId){
       $scope.formList.action = 'Editar';
+      $scope.listId = $stateParams.listId;
+      $http.get(urls.BASE_API + '/lists/' + $stateParams.listId)
+      .success(function(result, status){
+        console.log(result);
+        $scope.list = result.data;
+      })
+      .error(function(result, status){
+        console.log(result);
+      });
     }else{
       $scope.formList.action = 'Nueva';
     }
 
     $scope.submit = function(){
-      if ($scope.form.$invalid) {
-        $scope.form.errorMessage = 'Se encontraron errores en el formulario';
-        return;
-      }else if($scope.list.songs.length == 0){
-        $scope.form.errorMessage = 'Agrega al menos una canción a tu lista de canciones';
+      if($stateParams.listId){
+          $http.put(urls.BASE_API + '/lists/' + $stateParams.listId, $scope.list)
+          .then(function(listResult){
+            $scope.newList = listResult.data.data;
+            $('#successModal').modal('show');
+          }, function(listError){
+            console.log(listError);
+          });
       }else{
-        //if the form has valid information, then send the new list to the api
-        console.log($scope.list);
-        $http.post(urls.BASE_API + '/lists', $scope.list)
-        .then(function(listResult){
-          $scope.newList = listResult.data.data;
-          $('#successModal').modal('show');
-        }, function(listError){
-          console.log(listError);
-        });
+        if ($scope.form.$invalid) {
+          $scope.form.errorMessage = 'Se encontraron errores en el formulario';
+          return;
+        }else if($scope.list.songs.length == 0){
+          $scope.form.errorMessage = 'Agrega al menos una canción a tu lista de canciones';
+        }else{
+          //if the form has valid information, then send the new list to the api
+          $http.post(urls.BASE_API + '/lists', $scope.list)
+          .then(function(listResult){
+            $scope.newList = listResult.data.data;
+            $('#successModal').modal('show');
+          }, function(listError){
+            console.log(listError);
+          });
+        }
       }
     };
 
@@ -370,36 +447,91 @@ angular.module('jukebuzz.panel', ['ngRoute'])
     $scope.jukebox.lists = [];
     $scope.formJukebox = {};
     $scope.formJukebox.warningMessage = '';
-    if($stateParams.action == 'edit'){
+    if($stateParams.jukeboxId){
       $scope.formJukebox.action = 'Editar';
+      $http.get(urls.BASE_API + '/jukeboxes/' + $stateParams.jukeboxId + '?populate=lists')
+      .then(function(jukebox){
+      console.log(jukebox.data.data);
+      $scope.jukebox = jukebox.data.data;
+      var m = moment.parseZone($scope.jukebox.expirationDate);
+      $scope.jukebox.expirationDate = m.format("YYYY-MM-DD");
+      $scope.jukebox.startHour = parseInt($scope.jukebox.startTime.split(":")[0]);
+      $scope.jukebox.startMin = parseInt($scope.jukebox.startTime.split(":")[1]);
+      $scope.jukebox.endHour = parseInt($scope.jukebox.endTime.split(":")[0]);
+      $scope.jukebox.endMin = parseInt($scope.jukebox.endTime.split(":")[1]);
+      var listIds = [];
+      for(var i=0; i < $scope.jukebox.lists.length; i++) {
+        var list = $scope.jukebox.lists[i];
+        var $li = $("#droppable-template").clone(true);
+        $li.removeAttr('id');
+        $li.removeClass('hidden');
+        $li.attr('data-list-id', list.id);
+        $li.find('span').html(list.name);
+        $('.list-droppable').append($li);
+        console.log($li);
+        listIds.push(list.id);
+      }
+
+      $scope.jukebox.lists = listIds;
+
+
+      $http.get(urls.BASE_API + '/lists?adminId=' + $localStorage.userId)
+      .then(function(listsResults){
+        $scope.lists = listsResults.data.data;
+        for (var i in $scope.lists) {
+            if ($scope.lists.hasOwnProperty(i)) {
+              var list = $scope.lists[i];
+              if($.inArray(list.id, $scope.jukebox.lists)< 0){
+                var $elemList = $('<li>').html(list.name)
+                                .addClass('elem-draggable')
+                                .attr('data-list-id', list.id);
+                $elemList.draggable({
+                  helper: "clone",
+                  scroll: false,
+                  stack: ".elem-draggable",
+                  start : function(event, ui) {
+                    ui.helper.width($(this).width());
+                  }
+                });
+                $elemList.sortable();
+                $('.list-draggable').append($elemList);
+              }
+            }
+        }
+      }, function(listsError){
+        console.log(listsError);
+      });
+
+      }, function(jukeboxError){
+      console.log(jukeboxError);
+    });
     }else{
       $scope.formJukebox.action = 'Nueva';
+      $http.get(urls.BASE_API + '/lists?adminId=' + $localStorage.userId)
+      .then(function(listsResults){
+        $scope.lists = listsResults.data.data;
+        for (var i in $scope.lists) {
+            if ($scope.lists.hasOwnProperty(i)) {
+              var list = $scope.lists[i];
+              var $elemList = $('<li>').html(list.name)
+                              .addClass('elem-draggable')
+                              .attr('data-list-id', list.id);
+              $elemList.draggable({
+                helper: "clone",
+                scroll: false,
+                stack: ".elem-draggable",
+                start : function(event, ui) {
+                  ui.helper.width($(this).width());
+                }
+              });
+              $elemList.sortable();
+              $('.list-draggable').append($elemList);
+            }
+        }
+      }, function(listsError){
+        console.log(listsError);
+      });
     }
-
-    $http.get(urls.BASE_API + '/lists?adminId=' + $localStorage.userId)
-    .then(function(listsResults){
-      $scope.lists = listsResults.data.data;
-      for (var i in $scope.lists) {
-          if ($scope.lists.hasOwnProperty(i)) {
-            var list = $scope.lists[i];
-            var $elemList = $('<li>').html(list.name)
-                            .addClass('elem-draggable')
-                            .attr('data-list-id', list.id);
-            $elemList.draggable({
-              helper: "clone",
-              scroll: false,
-              stack: ".elem-draggable",
-              start : function(event, ui) {
-                ui.helper.width($(this).width());
-              }
-            });
-            $elemList.sortable();
-            $('.list-draggable').append($elemList);
-          }
-      }
-    }, function(listsError){
-      console.log(listsError);
-    });
 
     $(".jquery-picker").datepicker({ dateFormat: 'yy-mm-dd', minDate: 0 });
     $(document).ready(function(){
@@ -465,13 +597,25 @@ angular.module('jukebuzz.panel', ['ngRoute'])
         $scope.jukebox.endTime = endHour + ':' + endMin;
         $scope.jukebox.placeId =  $localStorage.place;
         console.log($scope.jukebox);
-        $http.post(urls.BASE_API + '/jukeboxes', $scope.jukebox)
-        .then(function(jukeboxResult){
-          $scope.newJukebox = jukeboxResult.data.data;
-          $('#successModal').modal('show');
-        }, function(jukeboxError){
-          console.log(jukeboxError);
-        });
+
+        if($stateParams.jukeboxId){
+          $http.put(urls.BASE_API + '/jukeboxes/' + $stateParams.jukeboxId, $scope.jukebox)
+          .then(function(jukeboxResult){
+            console.log(jukeboxResult);
+            $scope.newJukebox = jukeboxResult.data.data;
+            $('#successModal').modal('show');
+          }, function(jukeboxError){
+            console.log(jukeboxError);
+          });
+        }else{
+          $http.post(urls.BASE_API + '/jukeboxes', $scope.jukebox)
+          .then(function(jukeboxResult){
+            $scope.newJukebox = jukeboxResult.data.data;
+            $('#successModal').modal('show');
+          }, function(jukeboxError){
+            console.log(jukeboxError);
+          });
+        }
       }
     };
 
